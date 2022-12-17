@@ -1,0 +1,31 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - npm install 
+  pre_build:
+    on-failure: ABORT
+    commands:
+      - echo "run some pre-check"
+      #- npm run format:check
+      #- npm run lint:check
+  build:
+    on-failure: ABORT
+    commands:
+      - echo "run tests"
+      # - npm run-script start & npx wait-on http://localhost:3000
+      # - npx cypress run --record --key ${CYPRESS_KEY}
+
+  post_build:
+    commands:
+      - |
+          npm run build
+
+artifacts:
+  # include all files required to run application
+  # we include only the static build files
+  files:
+    - '**/*'
+  name: $CODEBUILD_WEBHOOK_TRIGGER
+  base-directory: 'dist'  
